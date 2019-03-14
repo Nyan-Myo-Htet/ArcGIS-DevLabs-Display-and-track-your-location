@@ -22,9 +22,11 @@
     require([
       "esri/Map",
       "esri/views/MapView",
+      "esri/Graphic",
       "esri/widgets/Locate",
+      "esri/widgets/Track",
       "dojo/domReady!"
-    ], function (Map, MapView, Locate) {
+    ], function (Map, MapView, Graphic, Locate, Track) {
 
       var map = new Map({
         basemap: "streets-navigation-vector"
@@ -47,6 +49,29 @@
       });
 
       view.ui.add(locate, "top-left");
+
+      var track = new Track({
+        view: view,
+        graphic: new Graphic({
+          symbol: {
+            type: "simple-marker",
+            size: "9px",
+            color: "green",
+            outline: {
+              color: "#efefef",
+              width: "1.2px"
+            }
+          }
+        }),
+        useHeadingEnabled: false,
+        goToLocationEnabed: false,
+        goToOverride: function (view, options) {
+          options.target.scale = null;
+          return view.goTo(options);
+        }
+      });
+
+      view.ui.add(track, "top-left");
 
     });
   </script>
